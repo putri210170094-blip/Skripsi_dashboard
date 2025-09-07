@@ -1,0 +1,11 @@
+streamlit
+seaborn
+matplotlib
+pandas
+numpy
+openpyxl
+scikit-learn
+pyswarms
+plotly
+dotenv
+psycopg2
