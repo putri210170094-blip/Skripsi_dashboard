@@ -1237,8 +1237,45 @@ def show_dashboard():
                 
                 with col1:
                     st.markdown('<div class="custom-card"><h3>📋 Preview Data</h3>', unsafe_allow_html=True)
-                    st.dataframe(df_processed.head(), use_container_width=True)
+                    
+                    # Buat DataFrame untuk preview dengan nomor urut mulai dari 1
+                    df_preview = df_processed.copy()
+                    df_preview.insert(0, 'No', range(1, len(df_preview) + 1))
+                    
+                    # Fitur pencarian
+                    search_term = st.text_input("🔍 Cari data...", placeholder="Ketik untuk mencari di semua kolom")
+                    
+                    if search_term:
+                        # Filter data berdasarkan pencarian
+                        mask = df_preview.astype(str).apply(lambda x: x.str.contains(search_term, case=False, na=False)).any(axis=1)
+                        df_display = df_preview[mask]
+                    else:
+                        df_display = df_preview
+                    
+                    # Tampilkan informasi jumlah data yang ditampilkan
+                    st.markdown(f"""
+                    <div style="background: rgba(255,255,255,0.5); padding: 8px; border-radius: 8px; margin-bottom: 10px;">
+                        <p style="margin: 0; font-size: 0.9rem; color: #2b5876;">
+                        <strong>📊 Menampilkan:</strong> {len(df_display)} dari {len(df_preview)} records
+                        </p>
+                    </div>
+                    """, unsafe_allow_html=True)
+                    
+                    # Tampilkan data
+                    st.dataframe(df_display, use_container_width=True, hide_index=True)
+                    
+                    # Download button untuk data lengkap
+                    if len(df_display) > 0:
+                        csv = df_display.to_csv(index=False)
+                        st.download_button(
+                            label="📥 Download Data yang Ditampilkan (CSV)",
+                            data=csv,
+                            file_name="data_pasien.csv",
+                            mime="text/csv"
+                        )
+                    
                     st.markdown('</div>', unsafe_allow_html=True)
+            
                     
                 with col2:
                     st.markdown('<div class="custom-card"><h3>📈 Statistik Data</h3>', unsafe_allow_html=True)
