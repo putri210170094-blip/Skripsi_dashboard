@@ -1258,6 +1258,7 @@ def show_dashboard():
                         color_discrete_sequence=['#a1c4fd']
                     )
                     fig1.update_layout(
+                        yaxis_title='Jumlah Pasien',
                         plot_bgcolor='rgba(0,0,0,0)',
                         paper_bgcolor='rgba(0,0,0,0)',
                     )
